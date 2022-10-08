@@ -16,11 +16,24 @@ f.write(soup.prettify())
 f.close()
 
 titles = soup.find_all('a', {'class': 'bbc-uk8dsi e1d658bg0'})
+urls = soup.find_all('a')
 
 title_list = []
+url_list = []
+tag_list = []
+
 for title in titles:
     title_list.append(title.getText())
-    print(title.getText())
+    url_list.append(title.get('href'))
+
+    sub_response = requests.get(title.get('href'))
+    sub_soup = BeautifulSoup(sub_response.text, 'lxml')
+    tags = sub_soup.find_all('li', {'class': 'bbc-1msyfg1 e2o6ii40'})
+
+    for tag in tags:
+        tag_list.append(tag.getText())
     
 print(title_list)
+print(url_list)
+print(tag_list)
 
